@@ -1,0 +1,77 @@
+[build-system]
+requires = ["hatchling>=1.21.1"]
+build-backend = "hatchling.build"
+
+[project]
+name = "slow-brain-fast-planner"
+version = "0.1.0"
+description = "Slow Brain, Fast Planner: Latency-Resilient VLM-Augmented Urban Navigation"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11,<3.14"
+dependencies = [
+  "numpy>=1.26,<2",
+  "pillow>=10,<12",
+  "pydantic>=2.6,<3",
+  "tqdm>=4.66,<5",
+  "opencv-python-headless>=4.9",
+  "onnx>=1.15.0",
+  "onnxruntime-gpu>=1.17.0,<1.23 ; sys_platform == 'linux'",
+  "onnxruntime>=1.17.0,<1.23 ; sys_platform != 'linux'",
+  "nvidia-cudnn-cu12>=9 ; sys_platform == 'linux'",
+  "nvidia-cublas-cu12>=12 ; sys_platform == 'linux'",
+  "nvidia-nccl-cu12>=2.21.5 ; sys_platform == 'linux'",
+  "nvidia-cuda-runtime-cu12>=12.1 ; sys_platform == 'linux'",
+  "google-genai>=0.5.0",
+  "huggingface-hub>=0.25,<1",
+  "torch==2.5.1+cu121 ; sys_platform == 'linux'",
+  "torch==2.5.1 ; sys_platform != 'linux'",
+  "matplotlib>=3.8",
+  "seaborn>=0.13.2",
+  "pytest>=8,<9",
+  "ruff>=0.2,<1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/slow_brain_fast_planner"]
+
+[tool.uv.sources]
+torch = [
+  { index = "pytorch-cu121", marker = "sys_platform == 'linux'" },
+]
+
+[tool.uv]
+index-strategy = "unsafe-best-match"
+required-environments = [
+  "sys_platform == 'linux' and platform_machine == 'x86_64'",
+  "sys_platform == 'darwin' and platform_machine == 'arm64'",
+]
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
+
+[[tool.uv.index]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
+explicit = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = [
+  "src/slow_brain_fast_planner/agents/**",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Template-heavy files: VLM prompt text, inline HTML report, and inline SVG figure
+# generation read better with their long template strings left unwrapped.
+"src/slow_brain_fast_planner/benchmarks/vqa_trajectory.py" = ["E501"]
+"src/slow_brain_fast_planner/reporting.py" = ["E501"]
+"scripts/paper_artifacts/benchmark_controller_tracking.py" = ["E501"]

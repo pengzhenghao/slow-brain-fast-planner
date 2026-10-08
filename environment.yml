@@ -1,0 +1,20 @@
+name: slow-brain-fast-planner
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  # Keep numpy <2 to match project deps (pyproject.toml) and avoid ABI mismatches
+  # with compiled extensions like matplotlib/pandas.
+  - "numpy<2"
+  - matplotlib
+  - tqdm
+  - pillow
+  - pip:
+      - -e ".[dev]"
+      - onnxruntime-gpu>=1.17.0
+      - onnx>=1.15.0
+      - nvidia-cudnn-cu12>=9
+      - nvidia-cublas-cu12>=12
+
+

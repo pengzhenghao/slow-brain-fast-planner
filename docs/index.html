@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Slow Brain, Fast Planner: Latency-Resilient VLM-Augmented Urban Navigation</title>
+  <meta name="description" content="A training-free interface between a slow vision-language model and a fast local planner. Research code, manuscript, and latency-resilient trajectory fusion for urban robot navigation.">
+  <link rel="canonical" href="https://pengzhenghao.github.io/slow-brain-fast-planner/">
+  <meta name="citation_title" content="Slow Brain, Fast Planner: Latency-Resilient VLM-Augmented Urban Navigation">
+  <meta name="citation_date" content="2026/06/18">
+  <meta name="citation_arxiv_id" content="2606.20458">
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2606.20458">
+  <meta name="citation_language" content="en">
+  <meta name="citation_author" content="Peng, Zhenghao">
+  <meta name="citation_author" content="He, Honglin">
+  <meta name="citation_author" content="Li, Quanyi">
+  <meta name="citation_author" content="Ma, Yukai">
+  <meta name="citation_author" content="Zhou, Bolei">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Slow Brain, Fast Planner">
+  <meta property="og:description" content="Latency-resilient VLM-augmented urban navigation. A slow VLM selects; a fast planner keeps moving.">
+  <meta property="og:url" content="https://pengzhenghao.github.io/slow-brain-fast-planner/">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "name": "Slow Brain, Fast Planner: Latency-Resilient VLM-Augmented Urban Navigation",
+  "headline": "Slow Brain, Fast Planner: Latency-Resilient VLM-Augmented Urban Navigation",
+  "url": "https://pengzhenghao.github.io/slow-brain-fast-planner/",
+  "inLanguage": "en",
+  "description": "Training-free VLM trajectory selection with latency-resilient fusion into a fast local planner.",
+  "keywords": [
+    "urban navigation",
+    "vision-language models",
+    "trajectory selection",
+    "latency-resilient control"
+  ],
+  "encoding": {
+    "@type": "MediaObject",
+    "encodingFormat": "application/pdf",
+    "contentUrl": "https://arxiv.org/pdf/2606.20458"
+  },
+  "hasPart": {
+    "@type": "SoftwareSourceCode",
+    "name": "Slow Brain, Fast Planner research code",
+    "codeRepository": "https://github.com/pengzhenghao/slow-brain-fast-planner"
+  },
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Zhenghao “Mark” Peng"
+    },
+    {
+      "@type": "Person",
+      "name": "Honglin He"
+    },
+    {
+      "@type": "Person",
+      "name": "Quanyi Li"
+    },
+    {
+      "@type": "Person",
+      "name": "Yukai Ma"
+    },
+    {
+      "@type": "Person",
+      "name": "Bolei Zhou"
+    }
+  ],
+  "datePublished": "2026-06-18",
+  "sameAs": "https://arxiv.org/abs/2606.20458",
+  "identifier": "arXiv:2606.20458"
+}
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main id="main" class="container">
+    <header class="paper-header">
+      <h1>Slow Brain, Fast Planner:<br>Latency-Resilient VLM-Augmented Urban Navigation</h1>
+      <div class="authors">
+        <div class="author"><strong>Zhenghao “Mark” Peng<sup>*</sup></strong><span>Amazon FAR</span></div>
+        <div class="author"><strong>Honglin He</strong><span>UCLA</span></div>
+        <div class="author"><strong>Quanyi Li</strong><span>Independent</span></div>
+        <div class="author"><strong>Yukai Ma<sup>*</sup></strong><span>Zhejiang University</span></div>
+        <div class="author"><strong>Bolei Zhou</strong><span>UCLA</span></div>
+      </div>
+      <p class="author-note">* Work done while at UCLA.</p>
+      <nav class="paper-links" aria-label="Paper resources">
+        <a href="https://arxiv.org/abs/2606.20458">Paper</a>
+        <span aria-hidden="true">|</span>
+        <a href="https://github.com/pengzhenghao/slow-brain-fast-planner">Code</a>
+        <span aria-hidden="true">|</span>
+        <a href="#citation">BibTeX</a>
+      </nav>
+    </header>
+
+    <figure class="teaser">
+      <a class="figure-link" href="assets/teaser.webp" aria-label="Open the system overview figure at full size">
+        <img src="assets/teaser.webp" width="2020" height="1888"
+          alt="The paper's system overview: a local planner exchanges trajectory candidates and delayed feedback with an off-the-shelf VLM, and candidate fusion drives a delivery robot.">
+      </a>
+      <figcaption><strong>Slow Brain, Fast Planner.</strong> A fast planner generates candidate
+        trajectories, and a slow VLM selects among them. Score Fusion blends the delayed VLM
+        choice into the planner’s current scores so the robot can keep moving.</figcaption>
+    </figure>
+
+    <section id="abstract">
+      <h2>Abstract</h2>
+      <p>Learning-based planners for sidewalk navigation can generate diverse candidate trajectories
+        in real time, yet their scoring functions often fail to select the best trajectory in
+        challenging situations, outputting trajectories that make the mobile robot drive onto grass,
+        toward pedestrians, or in the wrong direction, even when better candidates exist in the
+        same set. We call this the <em>trajectory scoring gap</em>: in real-world sidewalk navigation,
+        the gap between an anchor-based planner’s top choice and the best possible candidate is
+        substantial, likely due to limited high-level scene understanding capability of the planner.
+        Rather than replacing the planner with an end-to-end Vision-Language-Action model, we propose
+        a VLM-Planner interface that uses a VLM to select a candidate index from the planner’s
+        proposal set and then fuse it with the planner’s initial output. However, VLMs take 1–3s
+        per query and so cannot directly drive a 5–20Hz control loop. We contribute a training-free,
+        latency-resilient trajectory-level fusion layer that turns a stale VLM selection into
+        real-time planner scoring via geometric similarity with exponential decay. On ∼2,000
+        challenging real-world scenarios (e.g., junctions, pedestrian encounters), VLM selection
+        achieves 30% ADE reduction versus the planner’s best selection, while the planner remains
+        competitive in routine situations. In simulation, Score Fusion maintains &gt;80% success rate
+        with delays up to 5s. We demonstrate the full system on a mobile robot navigating challenging
+        campus sidewalks with varied network latency.</p>
+    </section>
+
+    <section id="method">
+      <h2>Fusing delayed VLM guidance</h2>
+      <p>The VLM’s selected trajectory is already stale when its response arrives. We compensate
+        for robot motion, compare the remaining trajectory with fresh planner candidates, and add
+        a similarity-based bonus that decays with age.</p>
+      <figure>
+        <a class="figure-link" href="assets/method.webp" aria-label="Open the trajectory fusion figure at full size">
+          <img src="assets/method.webp" width="2000" height="581" loading="lazy"
+            alt="Three panels from the paper show building an arc-length coordinate, selecting prefix points, and resampling the remaining trajectory to compute geometric distance.">
+        </a>
+        <figcaption><strong>Horizon-aware similarity.</strong> Motion compensation aligns the stale
+          VLM trajectory with the current robot frame. Similarity is computed over its remaining horizon.</figcaption>
+      </figure>
+    </section>
+
+    <section id="qualitative-results">
+      <h2>Trajectory selection</h2>
+      <figure class="qualitative">
+        <a class="figure-link" href="assets/qualitative.webp" aria-label="Open the trajectory selection examples at full size">
+          <img src="assets/qualitative.webp" width="2040" height="1460" loading="lazy"
+            alt="Success and failure examples from the paper, with numbered trajectories overlaid on sidewalk images and the VLM's corresponding reasoning.">
+        </a>
+        <figcaption><strong>When VLM selection helps—and when it does not.</strong> At a junction,
+          the VLM follows the sidewalk curve. On a routine straight, similar reasoning produces
+          a worse choice than the planner’s argmax.</figcaption>
+      </figure>
+    </section>
+
+    <section id="real-world">
+      <h2>Real-world deployment</h2>
+      <figure>
+        <a class="figure-link" href="assets/real-world.webp" aria-label="Open the real-world deployment figure at full size">
+          <img src="assets/real-world.webp" width="2031" height="395" loading="lazy"
+            alt="The paper's real-world deployment figure shows the delivery robot, the front-camera trajectory overlay presented to the VLM, and its reasoning about a pedestrian.">
+        </a>
+        <figcaption>A delivery robot on a campus sidewalk, the camera overlay seen by the VLM,
+          and its natural-language reasoning. See the paper for the full real-robot evaluation.</figcaption>
+      </figure>
+    </section>
+
+    <section id="citation">
+      <h2>BibTeX</h2>
+      <pre><code>@misc{peng2026slowbrainfastplanner,
+  title={Slow Brain, Fast Planner: Latency-Resilient VLM-Augmented Urban Navigation},
+  author={Zhenghao Peng and Honglin He and Quanyi Li and Yukai Ma and Bolei Zhou},
+  year={2026},
+  eprint={2606.20458},
+  archivePrefix={arXiv},
+  primaryClass={cs.RO},
+  url={https://arxiv.org/abs/2606.20458}
+}</code></pre>
+    </section>
+  </main>
+  <footer class="container">
+    Figures from <a href="https://arxiv.org/abs/2606.20458">Slow Brain, Fast Planner</a>.
+    <a href="https://github.com/pengzhenghao/slow-brain-fast-planner">Source code</a>.
+  </footer>
+</body>
+</html>
