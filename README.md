@@ -47,17 +47,17 @@ latency and fusion behavior. It does not simulate visual perception or obstacles
 ## Dataset and trajectory selection
 
 The [dataset](https://huggingface.co/datasets/pengzhenghao97/slow-brain-fast-planner-dataset)
-is currently private. Downloads require a Hugging Face account with an explicit access grant.
+contains the `mini` and `hard` splits below. The partner-fleet routine-scenario
+pool used in the paper is not included.
 
 | Split | Content | Size |
 |---|---|---|
 | `mini` | 1 episode, 3 clips | ~125 MB |
 | `hard` | 32 episodes, 1,414 stored clips; 1,412 after GT-quality filtering | ~10.9 GB |
 
-With dataset access, download the mini split and run the planner baseline:
+Download the mini split and run the planner baseline:
 
 ```bash
-hf auth login
 python scripts/download_dataset.py --split mini
 python scripts/run_trajectory_selection.py \
   --dataset data/slow-brain-fast-planner/mini \

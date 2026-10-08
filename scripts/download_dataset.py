@@ -15,8 +15,8 @@ Usage:
     python scripts/download_dataset.py --split hard --out /path/to/data
     python scripts/download_dataset.py --split all
 
-The dataset is private. Use ``HF_TOKEN`` (or ``hf auth login``) for an account
-with an explicit access grant. Authentication alone does not grant access.
+Public datasets can be downloaded without authentication. Optionally set
+``HF_TOKEN`` or run ``hf auth login`` for authenticated requests.
 """
 
 from __future__ import annotations
