@@ -2,6 +2,8 @@
 
 Static HTML and CSS with figures from the paper. The paper is linked on [arXiv](https://arxiv.org/abs/2606.20458).
 
+Project page: https://pengzhenghao.github.io/slow-brain-fast-planner/
+
 ## Local preview
 
 From the repository root:
@@ -14,11 +16,8 @@ Open http://127.0.0.1:8000/. No build step is required.
 
 ## GitHub Pages
 
-1. In the public repository, set **Settings → Pages → Source** to **GitHub Actions**.
-2. Run **Actions → Deploy project page → Run workflow** on `main`.
-3. Open https://pengzhenghao.github.io/slow-brain-fast-planner/.
-
-Deployment is manual; changing repository visibility alone does not deploy the site.
+GitHub Pages publishes the `/docs` directory on `main` using **Deploy from a
+branch**. Pushing updates to `main` automatically rebuilds and deploys the site.
 
 ## Figures
 

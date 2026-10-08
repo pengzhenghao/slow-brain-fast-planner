@@ -7,7 +7,7 @@ Zhenghao “Mark” Peng, Honglin He, Quanyi Li, Yukai Ma, Bolei Zhou
 [**Paper**](https://arxiv.org/abs/2606.20458) |
 [**Code**](https://github.com/pengzhenghao/slow-brain-fast-planner) |
 [**Dataset**](https://huggingface.co/datasets/pengzhenghao97/slow-brain-fast-planner-dataset) |
-[**Webpage preview**](#webpage-preview)
+[**Webpage**](https://pengzhenghao.github.io/slow-brain-fast-planner/)
 
 A slow vision-language model selects among a fast local planner’s candidate trajectories.
 Score Fusion turns delayed VLM advice into a decaying score bonus on fresh candidates,
@@ -80,17 +80,6 @@ data, and ONNX planner weights. Dataset evaluations use prelogged planner candid
 
 See the [experiment reference](docs/experiments.md) for full-split evaluation,
 sharding, simulation sweeps, data formats, and the implementation map.
-
-## Webpage preview
-
-The project page is a static site in `docs/`. From the repository root:
-
-```bash
-python -m http.server 8000 --bind 127.0.0.1 --directory docs
-```
-
-Open **http://127.0.0.1:8000/**. See [deployment instructions](docs/README.md)
-to publish it with GitHub Pages.
 
 ## Development
 
